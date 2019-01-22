@@ -19,7 +19,7 @@ View - 2
 ```
 ## Assignment PART-2
 
-Create a view for WelcomePage component. Implement authorization and route protection and deploy your app your Heroku.
+Create a view for WelcomePage component. Implement authorization and route protection and deploy your app on Heroku.
 
 ## Steps to Setup the project
 1. Fork this repository into your personal workspace.
