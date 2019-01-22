@@ -17,9 +17,9 @@ View - 1
 View - 2
 |__EditNote
 ```
-## Assignment PART-1
+## Assignment PART-2
 
-Create a view similar to keep.google.com Dashboard Page. Persist the Notes using JSON-SERVER.
+Create a view for WelcomePage component. Implement authorization and route protection and deploy your app your Heroku.
 
 ## Steps to Setup the project
 1. Fork this repository into your personal workspace.
