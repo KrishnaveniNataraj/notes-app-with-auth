@@ -1,16 +1,23 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-
+import EditIcon from '@material-ui/icons/EventNote';
+import IconButton from '@material-ui/core/IconButton';
+import AssignmentIcon from '@material-ui/icons/NoteAdd';
+import Typography from '@material-ui/core/Typography';
 import SearchBar from './SearchBar';
+import { Button } from '@material-ui/core';
+import {firebase, googleAuthProvider} from '../firebase/firebase';
 
 
 const styles = theme => ({
   root: {
     width: '100%',
+  },
+  grow: {
+    flexGrow:1
   },
   menuButton: {
     marginLeft: -12,
@@ -24,20 +31,62 @@ const styles = theme => ({
   },
 });
 
-function Header(props) {
-  const { classes } = props;
-  return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
+class Header extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      isLoggedIn: localStorage.getItem('isLoggedIn') || false
+    }; 
+    this.handleLogin=this.handleLogin.bind(this);
+    this.handleLogOff=this.handleLogOff.bind(this); 
+    this.onToggleChange = this.onToggleChange.bind(this);  
+  }  
+  onToggleChange() {
+    const changeView = this.props.viewType === 'gridView' ? 'listView' : 'gridView';
+    this.props.toggleView(changeView);
+  }
+
+  handleLogin(){
+    return firebase.auth().signInWithPopup(googleAuthProvider)
+    .then(()=>{
+      this.setState({ isLoggedIn: true });
+      localStorage.setItem('isLoggedIn', true);
+    });
+  }
+
+  handleLogOff(){
+    return firebase.auth().signOut()
+    .then(()=>{
+      this.setState({ isLoggedIn: false });
+      localStorage.removeItem('isLoggedIn');
+    })
+  }
+
+  render(){
+    const { classes, viewType } = this.props;
+    return (
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar>
+          <AssignmentIcon />
           <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-            Notes
-          </Typography>
-          <SearchBar />
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+            Stickies
+          </Typography>  
+            {(this.state.isLoggedIn)?<SearchBar />: ''}       
+            <div className={classes.grow}></div>
+              <Button onClick={this.state.isLoggedIn ? this.handleLogOff: this.handleLogin}>
+               {this.state.isLoggedIn ? 'SignOff' : 'Login'  }
+              </Button>
+              {/* <Button variant="contained" color="secondary" className={classes.button} onClick={this.onToggleChange}>
+                {viewType === 'gridView' ? 'List' : 'Grid'}
+              </Button> */}
+          </Toolbar>
+        </AppBar>
+      </div>
+    );
+  }
+
+
 }
 
 Header.propTypes = {

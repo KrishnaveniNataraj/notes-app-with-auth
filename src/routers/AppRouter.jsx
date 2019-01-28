@@ -1,7 +1,24 @@
-import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import React, { Component, Fragment } from 'react';
+import { Router, Route, Switch } from 'react-router-dom';
 import NotesApp from '../components/NotesApp';
 import EditNote from '../components/EditNote';
+import WelcomePage from '../components/WelcomePage';
+import Header from '../components/Header';
+import { red } from '@material-ui/core/colors';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import createHistory from 'history/createBrowserHistory';
+import  pink from '@material-ui/core/colors/pink';
+
+export const history = createHistory();
+
+const theme = createMuiTheme({
+    palette: {
+        primary: pink,        
+    },
+    typography: {
+        useNextVariants: true,
+    },
+});
 
 class AppRouter extends Component {
     constructor(props) {
@@ -14,60 +31,106 @@ class AppRouter extends Component {
         this.handleUpdateNote = this.handleUpdateNote.bind(this);
     }
 
-    componendDidMount() {
-        // Get all the notes
+    componentDidMount() {
+        console.log("componentDidMount");        
+        fetch('http://localhost:8080/notes')
+            .then(response => response.json())
+            .then(notes => {               
+                this.setState({
+                    notes: notes,                              
+                });
+            });
     }
 
-    handleAddNote(note) {
+    handleAddNote(note) {        
         this.setState((currState) => ({
             notes: currState.notes.concat([note])
         }));
-
-        // Post a new note
+        fetch('http://localhost:8080/notes', {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(note)
+        })
+        .then(response => response.json())
+        .then(note => console.log(`note created with value: ${JSON.stringify(note)}`));
     }
 
     handleRemoveNote(noteId) {
+        fetch('http://localhost:8080/notes/'+noteId, {
+            method: 'DELETE',
+            headers: {"Content-Type": "application/json"}            
+        })
+        .then(response => response.json())
+        .then(
+            console.log("delete "+noteId)           
+        );
+
         const noteIndexToRemove = this.state.notes.findIndex(note => note.id === noteId);  
         this.setState((currState) => ({
             notes: [...currState.notes.slice(0, noteIndexToRemove), ...currState.notes.slice(noteIndexToRemove + 1)]
         }));
-
-        // Delete the note
     }
 
     handleUpdateNote(updatedNote) {
         const noteIndexToUpdate = this.state.notes.findIndex(note => note.id === updatedNote.id);  
+
+        fetch('http://localhost:8080/notes/'+updatedNote.id, {
+            method: 'PUT',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(updatedNote)
+        })        
+        .then(response => response.json())
+        .then(note => console.log(`note created with value: ${JSON.stringify(note)}`));        
+
         this.setState((currState) => ({
             notes: [...currState.notes.slice(0, noteIndexToUpdate), {...updatedNote}, ...currState.notes.slice(noteIndexToUpdate + 1)]
         }));
-
-        // Update the note
     }
 
     render() {
         return (
-            <BrowserRouter>
-                <Switch>
-                    <Route 
-                        path="/home" 
-                        render={(props) => (<NotesApp
-                                                {...props}
-                                                notes={this.state.notes}
-                                                handleAddNote={this.handleAddNote}
-                                                handleRemoveNote={this.handleRemoveNote}
-                                            />)}
-                        exact 
-                    />
-                    <Route 
-                        path="/edit-note/:id" 
-                        render={(props) => <EditNote
-                                                {...props}
-                                                notes={this.state.notes}
-                                                handleUpdateNote={this.handleUpdateNote} 
-                                            />} 
-                    />
-                </Switch>
-            </BrowserRouter>
+            <Fragment>
+                <MuiThemeProvider theme={theme}>
+                    <Header />
+                </MuiThemeProvider>
+                <Router history={history}>
+                    <Switch>
+                        <Route
+                            path="/"
+                            exact
+                            render={()=>(
+                                <MuiThemeProvider theme={theme}>
+                                    <WelcomePage/>
+                                </MuiThemeProvider>
+                            )}
+                        />
+                        <Route 
+                            path="/home" 
+                            render={(props) => (<MuiThemeProvider theme={theme}>
+                                                <NotesApp
+                                                    {...props}
+                                                    notes={this.state.notes}
+                                                    handleAddNote={this.handleAddNote}
+                                                    handleRemoveNote={this.handleRemoveNote}
+                                                />
+                                                </MuiThemeProvider>
+                                                )}
+                            exact 
+                        />
+                        <Route 
+                            path="/edit-note/:id" 
+                            render={(props) => (<MuiThemeProvider theme={theme}>
+                                                <EditNote
+                                                    {...props}
+                                                    notes={this.state.notes}
+                                                    handleUpdateNote={this.handleUpdateNote} 
+                                                />
+                                                </MuiThemeProvider>
+                                                )} 
+                        />
+                    </Switch>
+                </Router>
+            </Fragment>
         );
     }
 }

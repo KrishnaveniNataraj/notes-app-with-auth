@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core';
 import { Tooltip } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
@@ -9,18 +8,17 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
 const styles = theme => ({
     fab: {
         margin: theme.spacing.unit * 2,
     },
     absolute: {
         position: 'absolute',
-        bottom: theme.spacing.unit * 2,
+        borderRadius:7,
+        bottom: theme.spacing.unit * 0.5,
         right: theme.spacing.unit * 3,
     },
 });
-
 class NoteTaker extends Component {
     constructor(props) {
         super(props);
@@ -35,11 +33,9 @@ class NoteTaker extends Component {
         this.handleNoteTitleChange = this.handleNoteTitleChange.bind(this);
         this.handleNoteDescriptionChange = this.handleNoteDescriptionChange.bind(this);
     }
-
     handleClickOpen() {
         this.setState({ open: true });
     }
-
     handleClose() {
         this.setState({ 
             open: false,
@@ -47,15 +43,12 @@ class NoteTaker extends Component {
             noteDescription: '',
         });
     }
-
     handleNoteTitleChange(event) {
         this.setState({ noteTitle: event.target.value });
     }
-
     handleNoteDescriptionChange(event) {
         this.setState({ noteDescription: event.target.value });
     }
-
     handleAddNote() {
         const newNote = {
             id: Math.random() * 2342342,
@@ -65,7 +58,6 @@ class NoteTaker extends Component {
         this.props.handleAddNote(newNote);
         this.handleClose();
     }
-
     render() {
         const { classes } = this.props;
         return (
@@ -76,7 +68,7 @@ class NoteTaker extends Component {
                         className={classes.absolute}
                         onClick={this.handleClickOpen}
                     >
-                        <AddIcon />
+                        +Note
                     </Fab>
                 </Tooltip>
                 <Dialog
@@ -121,5 +113,4 @@ class NoteTaker extends Component {
         );
     }
 }
-
 export default withStyles(styles)(NoteTaker);
