@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Note component 1`] = `
+<Note
+  classes={
+    Object {
+      "deleteIcon": "Note-deleteIcon-1",
+    }
+  }
+  handleRemoveNote={[MockFunction]}
+  note={
+    Object {
+      "id": 1,
+      "noteDescription": "note1 desc",
+      "noteTitle": "note1",
+    }
+  }
+/>
+`;

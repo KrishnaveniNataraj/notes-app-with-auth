@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render WelcomePage component correctly 1`] = `
+<Fragment>
+  <t
+    fluid={false}
+    tag="div"
+  >
+    <t
+      cascade={false}
+      className=""
+      hover={false}
+      rounded={false}
+      src=""
+      tag="div"
+      waves={false}
+      zoom={false}
+    >
+      <img
+        alt="First slide"
+        className="d-block w-100"
+        src="notes3.jpg"
+      />
+      <t
+        className=""
+        overlay="black-light"
+        pattern=""
+        tag="div"
+      />
+    </t>
+  </t>
+</Fragment>
+`;

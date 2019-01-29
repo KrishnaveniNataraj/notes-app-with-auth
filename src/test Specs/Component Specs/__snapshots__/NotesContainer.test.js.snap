@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render NotesContainer component correctly 1`] = `
+<WithStyles(Grid)
+  container={true}
+  spacing={8}
+>
+  <WithStyles(Grid)
+    item={true}
+    key="1"
+    sm={4}
+    xl={3}
+    xs={12}
+  >
+    <WithStyles(Note)
+      handleRemoveNote={[MockFunction]}
+      note={
+        Object {
+          "id": 1,
+          "noteDescription": "note1 desc",
+          "noteTitle": "note1",
+        }
+      }
+    />
+  </WithStyles(Grid)>
+</WithStyles(Grid)>
+`;
